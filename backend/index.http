@@ -1,0 +1,44 @@
+
+###
+POST http://localhost:5000/register
+Content-Type: application/json
+
+{
+    "username":"keka",
+    "name":"uday",
+    "password" : "keka123"
+}
+
+
+###
+POST http://localhost:5000/login
+Content-Type: application/json
+
+{
+    "username" : "pavan",
+    "password" : "pavan123"
+}
+
+
+
+###
+GET  http://localhost:5000/products?sort_by=&category=&title_search=&rating=4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InBhdmFuIiwiaWF0IjoxNjg0ODI1MTI1fQ.1qw_io6YsVkuplW2YBr5c9GEaD4OpPMihVuzSeVcKso
+
+
+
+
+
+###
+POST http://localhost:5000/admin/addproduct
+Content-Type: application/json
+
+{  
+        "title": "Men Waistcoat",
+        "brand": "LEVIS",
+        "price": "2500",
+        "id": "4",
+        "image_url": "http://surl.li/hflpr",
+        "rating": "4.3",
+        "category" : "CLOTHING"
+}
