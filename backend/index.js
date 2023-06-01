@@ -49,6 +49,7 @@ const authenticateToken = (request, response, next) => {
         response.status(401);
         response.send("UnAuthorised");
       } else {
+        request.username = payload.username;
         next();
       }
     });
@@ -87,7 +88,7 @@ app.post("/register", async (request, response) => {
     await db.run(createUserQuery);
     const payload = { username: username };
     const jwtToken = jwt.sign(payload, "MY_SECRET_TOKEN");
-    response.send({ jwt_token: jwtToken });
+    response.send({ jwt_token: jwtToken, prime: false });
     response.status(200);
   }
 });
@@ -220,7 +221,37 @@ app.get("/other-products/:id", authenticateToken, async (request, response) => {
   response.send(otherProducts);
 });
 
-app.get("/prime-deals/", authenticateToken, async (request, response) => {});
+app.get("/prime-deals/", authenticateToken, async (request, response) => {
+  const primeStatus = `
+  SELECT 
+    prime 
+  FROM 
+    users 
+  WHERE 
+    username = '${request.username}'
+  `;
+
+  const dbResponse = await db.get(primeStatus);
+  if (dbResponse.prime == "false") {
+    response.status(401);
+    response.send(dbResponse);
+  } else {
+    const primeProductsQuery = `
+    SELECT 
+      * 
+    FROM 
+      products
+    WHERE
+      deal = 'true'
+    limit  3
+
+
+    `;
+
+    const products = await db.all(primeProductsQuery);
+    response.send(products);
+  }
+});
 
 app.post("/admin/addproduct/", async (request, response) => {
   const product = request.body;
